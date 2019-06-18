@@ -1,0 +1,8 @@
+//This is version file which identifies some informations relevant to the project and source files like:
+//baseline version - i.e. version on which curent set of source files is based on
+//destination version - i.e. target version of the release which is under development
+baseline version: 5.9.1
+destination version: 6.0.1
+status:
+- to protect SRAM battery J1CENTER keyboard Wall-e turn off clears any RTC alarm setup
+- this is the version I decided to make public via GitHub

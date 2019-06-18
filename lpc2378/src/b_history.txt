@@ -1,0 +1,644 @@
+This files is a compilation of history of all releases I made
+-------------------------------------------------------------
+
+Release: 6.0.1
+Date: 18-Jun-2019
+Purpose: This is version I make public via GitHub
+
+Description:
+//This is version file which identifies some informations relevant to the project and source files like:
+//baseline version - i.e. version on which curent set of source files is based on
+//destination version - i.e. target version of the release which is under development
+baseline version: 6.0.1
+destination version: 6.0.1
+status:
+- to protect SRAM battery J1CENTER keyboard Wall-e turn off clears any RTC alarm setup
+- this is the version I decided to make public via GitHub
+########################################################################################################################
+
+Release: 6.0.0
+Date: 12-Nov-2018
+Purpose: This is first Wall-e official release, after 10 years od work.
+	It implements basic intended behaviour through 3 internal programs which can be voice selected:
+	BATH - main program to identify Barbara taking bath for a long time
+	ENJOY - Walle Simple Squencer based sample basic movement program just for try, not very different to TEST
+	TEST - very similar to ENJOY
+
+Description:
+//This is version file which identifies some informations relevant to the project and source files like:
+//baseline version - i.e. version on which curent set of source files is based on
+//destination version - i.e. target version of the release which is under development
+baseline version: 5.9.1
+destination version: 6.0
+status:
+- removed Microchip Grapic Library port to make place for Wall-e Graphic Library
+- uC-OSII tick interupt is driven by timer 2 instead of timer 0 to release timer 0 for ultrasonic sensor handling
+- CMD_TURN_HEAD added subcommands to turn on and turn off head servo
+- scanning to determine left or right movement in  StateCheckForDestination made smooth
+- added Timer0 handling of US distance detector Echo signal measurement
+- added US HC-SR04 distance detector driver to measure front raw distance to obstacle in [mm]
+- added US and IRED fusion for stright forward obstacle determination
+- added UART1 handling to communicate with EasyVR (voice recognition) module
+- added EasyVR handling
+- added watchdog handling to reset uP on demand (if neded to restart completely with new setup for example)
+- in move forward first US based detection is made before fusion to quickly react for short distance obstacles	
+- added ability to switch programs executed by Wall-e either via voice commands or terminal
+- added embedded Walle Sequencer Interpreter for simple build-in action sequencies programming
+- using created sequencer TEST and ENJOY sequencies created
+- standardized DEBUG messages displayed
+- sRtcData modified to reflect RTC alarm state more accurately, also EVT_ALARM is made now periodic
+- added strcat to lib_std to concatenate strings
+- created Wall-e Graphic Library and all Wall-e's windows
+- removed bug with permanentry increased nottifier dispatching error (there was an empty subscription in one subscriber)
+- removed bug with display mng not processing notifiers just after power up when keeping version info on LCD
+- added EVD_DISPLAY_INFO notifier to handle criticla information display
+- corected obstacle detection for stright move to avoid colision with obstacles
+- large tables (voice commands, Wall-e's sequencies) made const to be stored in Flash instead of RAM
+- assume completed 12-Nov-2018 as first official version to complete first stage of implementation of my WALL-E program
+########################################################################################################################
+
+Release: 5.9.1
+Date: 23-Sep-2017
+Purpose: Purpose was to archive everything what was done before I statrted to develop
+	my own graphic lib for Wall-e's LCD.
+	Originally I planned to use Microchip Graphic Library which I ported to Nokia 6610 LCD Display
+	in 2017, but because I finally run UART termine like connection to Wall-e I decided to use
+	LCD only to display key information for this relatively large graphical library was too much.
+
+Description:
+
+- corrected cSmartPtr class when it comes to operator= allowing for not initialized smart pointers variables to be created
+- created mw_notifier_data.hpp which defines all data structures to notifiers in the system
+- created not compiled a_res_list.h file to store definition of all system tasks and managers
+- created new revised structure of managers in the system
+- cLeftArmMngr and cRightArmMngr - created with resolved issue of not always working PWM1 MR (Match Reg) setup
+- cKeyPadMngr - created
+- cMonitorMngr - created
+- cMngRTC - created
+- cMngMotion - created
+- smooth movement added for head and arms (as an option for arm movemnt)
+- initialization of head movement to front and arm movement to horizontal put into dispatcher task
+- bateries state monitoring FSM added to cMonitorMngr to determine NORMAL. WARNING and LOW state of batteries
+- photo-nose and photo-tails processing functions added
+- added turn left and right command for specified degree between 0-90 degs
+- standrized sub command ids as well as some commands better structured/grouped 
+- foto-tail and foto-nose api similar to ired sensor and consitent between sensors
+- AppMngr class renamed to ExeMngr (with intention to be a part of future WalleBrain class)
+- corrected MoveOnRandPath to corectly process allowed paths bits mask
+- added lib_time library to manage time and date
+- removed possible issue of RTC overrun error when reading time and date
+- added BrainMngr with CtxMngr and ExeMngr being parts of it
+- CMD_ALARM notifier eliminated instead CMD_RTC is used to provide both time and alarm related services
+- fixed bug because MoveReverseCmd was not possible to be executed from mng_exe
+- sync only methods in mng_exe does not have HandlingType but are renamed with Sync prefix
+- simple light source identification state machine added to mng_exe to implement basic Wall-e algorithm
+- changed movement results constants to detect MOVE_BREAK and MOVE_ANGLE preciseli i.e. for left and rigth turns
+- added UART0 transmition for debuging with terminal through RS232 cable
+- modified constants for obstacles detection
+- added internal ADC handling to ready X, Y and Z direction acceleration
+- added tilt detection based on acceleration
+- modified cMotionMngr members FindMovePaths and MoveOnRandPath to make move attempts forward when sectors A, B, C are occupied
+- added StateCheckForDestination which determines final destination based on light decrease on Wall-e sides instead of on NO PATH TO MOVE state
+- added Remote Manager for remote Wall-e access through terminal to structure it
+- fixed bug with wrong year setup for default RTC
+- added static RAM preserved POWER_OFF_REASON and EXCEPTION_REASON
+- critical interrupt is signaled by LED specified number of times and next power off is executed
+- added hw_sram.c to handle static RAM and to exclude this handling from hw_rtc.c
+- hw_rtc.c modified to handle timer knowing if static ram is or is not preserved
+- mng_monitor for sys alive message include power off reason, exception reason and static ram state information 
+########################################################################################################################
+
+Release: 5.9
+Date: 08-Dec-2013
+Purpose: That is a baseline created before major changes of the structure of managers,
+         because of final decision about CMD, RSP and EVT notifier structure
+
+Description:
+	- uCOS-II was finally run.
+	- Timer0 is used to generate timer IRQ.
+	- ISR is written according to ARM port of uCOS-II with all bug fixed.
+	- Two tasks are finally running in paraller means uCOS-II port is completed.
+	- C memalloc and free developed and tested.
+	- C++ ready - global operator new() and global operator delete() ready to not use lstdc++ standard library.
+	- Critical exception generation through SWI added.
+	- stack for all modes verified and setup in linker command file not in startup code.
+	- heap start and end defined at linking time - provides all free RAM for heap automatically.
+	- os_wrap created to provide object orieted wrapper to uCOS-II with singleton Kernel and Thread
+	- preliminary version of Notifier, Publisher, Subscriber and Dispatcher tested without threads
+          (in code Dispatcher is derived from cThread to dispatch periodically but  this was not yet checked)
+	- original idea of cDispatcher inheriting from cThread rewritten cKernel keeps cDispatcher and cDispatcherThread
+          as well as all global Mutexes to protect heap allocations and Notifier's reference counting
+	- cMngBase class defined capable to publish and subscribe notifiers working example created based on it:
+          AppManager is publishing periodically two notifiers NT_ID02-LedOn and NT_ID03-LedOff, whlile
+	  LedManager is subscribed to receive two notifiers and either turn on LED or off and change status on LCD
+	- cSmartPtr template class re-written to correctly handle smart ptr to different notifier types like
+	  cTypeNotifier and cDataNotifier with working example of one publisher and two subscribers.
+	  There is also high priority notifiers handling added which places high priority in front of the
+	  publisher and subscriber queue
+        - initial version to generate PWM waves for motor control on uP pin 69 (PWM1) and pin 70 (PWM2)
+	- stack frame problem fixed - added -fomit-frame-pointer to generate interrupt safe function entry code
+	- layered structure naming convention applied to the files
+	- gpio with servicies to read BUT1, BUT2 and J1 added and checked
+	- cNotifier and derivatives modified to be initialized when instantinated
+	- when uCOS-II resource is not created by C++ wrapper an exception is generated
+	- InManager added to generate key related Notifiers (on key press and on key release)
+	- changed frequency of PWM for MOTRO control from 25kHZ to 8366 Hz (Timer3 prescaler =0x05 instead 0x01)
+	- added MOTOR direction control commends into hw_gpio.c with PWM count change
+	- added StackCheck capabilities to cThread
+	- added ADC handling through SPI
+	- added Buzzer control functions
+	- added LCD windowing management framework (contains very basic initial controls for extension in future)
+	- destination structure of managers (mng_motion,mng_sense,mng_hmi,mng_ctrl,mng_sys,mng_app)
+	- improved operators inside cSmartPtrBase and cSmartPtr to deal with NULL pointers
+	- non-blocking Notifier receive function - capable to get "NULL" i.e. invalid smart pointer (what means none notifier received)
+	- added tracks transoptors interrupt handling
+	- added motor control function to make movements based on specified number of transoptor counts
+	- added power source FSM to detect normal, warn and low state (not tested)
+	- added graphics heap placed in USB controllerr SRAM
+	- Microchip Graphics Library (MGL) ported to work with my LCD
+	- all old style Windows Graphic Library approach removed from the project
+	- simple MGL applications created with sliders to play with LCD colors
+	- added RTC support with ALARM output triggering (automatic power on)
+	- RunTrackPulses modified to stop tracks at same time when InLeftPulses==InRightPulses
+	- long J1CENTER button press causes uP Board power turn off
+	- ADC CLK changed to 1 785 714 Hz instead of original 125 000 Hz to get ADC polling quicker
+	- ARS sensor added with angular rate integrated to the rotation angle
+New in version: 5.9
+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+	- tracks control is moved out of Port2IsrHandler interrupt to tsk_track.c defined LeftTrackControlTask() and RightTrackControlTask()
+	- speed profile handling is moved out of Port2IsrHandler interrupt and is handled by Left and Right  Track Control Tasks
+	- handling of distance detector added for ctr_gp2d12.c function
+	- functions to generate random number added to lib_std.c 
+	- scanning space for obstacles ahead of Wall-e added with path selection algo to omit obstacles
+	- cNotifier extended to handle manager id in addition to handling priority
+	- modified structure of managers to have HW related to particular functions and interacting together under
+	  ambrela  of one manager for exampl mng_motion has IR and ARS interacting together
+	- Notifiers ID defined for command and responses as well as for events	
+########################################################################################################################
+
+Release: 5.8
+Date: 11-June-2011
+Description:
+	- uCOS-II was finally run.
+	- Timer0 is used to generate timer IRQ.
+	- ISR is written according to ARM port of uCOS-II with all bug fixed.
+	- Two tasks are finally running in paraller means uCOS-II port is completed.
+	- C memalloc and free developed and tested.
+	- C++ ready - global operator new() and global operator delete() ready to not use lstdc++ standard library.
+	- Critical exception generation through SWI added.
+	- stack for all modes verified and setup in linker command file not in startup code.
+	- heap start and end defined at linking time - provides all free RAM for heap automatically.
+	- os_wrap created to provide object orieted wrapper to uCOS-II with singleton Kernel and Thread
+	- preliminary version of Notifier, Publisher, Subscriber and Dispatcher tested without threads
+          (in code Dispatcher is derived from cThread to dispatch periodically but  this was not yet checked)
+	- original idea of cDispatcher inheriting from cThread rewritten cKernel keeps cDispatcher and cDispatcherThread
+          as well as all global Mutexes to protect heap allocations and Notifier's reference counting
+	- cMngBase class defined capable to publish and subscribe notifiers working example created based on it:
+          AppManager is publishing periodically two notifiers NT_ID02-LedOn and NT_ID03-LedOff, whlile
+	  LedManager is subscribed to receive two notifiers and either turn on LED or off and change status on LCD
+	- cSmartPtr template class re-written to correctly handle smart ptr to different notifier types like
+	  cTypeNotifier and cDataNotifier with working example of one publisher and two subscribers.
+	  There is also high priority notifiers handling added which places high priority in front of the
+	  publisher and subscriber queue
+        - initial version to generate PWM waves for motor control on uP pin 69 (PWM1) and pin 70 (PWM2)
+	- stack frame problem fixed - added -fomit-frame-pointer to generate interrupt safe function entry code
+	- layered structure naming convention applied to the files
+	- gpio with servicies to read BUT1, BUT2 and J1 added and checked
+	- cNotifier and derivatives modified to be initialized when instantinated
+	- when uCOS-II resource is not created by C++ wrapper an exception is generated
+	- InManager added to generate key related Notifiers (on key press and on key release)
+	- changed frequency of PWM for MOTRO control from 25kHZ to 8366 Hz (Timer3 prescaler =0x05 instead 0x01)
+	- added MOTOR direction control commends into hw_gpio.c with PWM count change
+	- added StackCheck capabilities to cThread
+	- added ADC handling through SPI
+	- added Buzzer control functions
+	- added LCD windowing management framework (contains very basic initial controls for extension in future)
+	- destination structure of managers (mng_motion,mng_sense,mng_hmi,mng_ctrl,mng_sys,mng_app)
+	- improved operators inside cSmartPtrBase and cSmartPtr to deal with NULL pointers
+	- non-blocking Notifier receive function - capable to get "NULL" i.e. invalid smart pointer (what means none notifier received)
+	- added tracks transoptors interrupt handling
+	- added motor control function to make movements based on specified number of transoptor counts
+	- added power source FSM to detect normal, warn and low state (not tested)
+	- added graphics heap placed in USB controllerr SRAM
+	- Microchip Graphics Library (MGL) ported to work with my LCD
+	- all old style Windows Graphic Library approach removed from the project
+	- simple MGL applications created with sliders to play with LCD colors
++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+	- added RTC support with ALARM output triggering (automatic power on)
+	- RunTrackPulses modified to stop tracks at same time when InLeftPulses==InRightPulses
+	- long J1CENTER button press causes uP Board power turn off
+	- ADC CLK changed to 1 785 714 Hz instead of original 125 000 Hz to get ADC polling quicker
+	- ARS sensor added with angular rate integrated to the rotation angle
+	- PID functinality build into void Port2IsrHandler(void) with trial for MID_SPEED profile
+IMPORTAN!
+	This is trial version when I made investigation of applying PID regulation
+	to get both track speed same. The tial was made for MID SPEED profile.
+	PID coeffcents where calculated for MID speed using Ziegler-Nicholas method.
+	It seems that this is the only method (PID regulator) to get both track working the same,
+	otherwise robot is turning because it is not possible to callibrate track speed without
+	the close loop regulation.
+	The time delta for LOW and HIGH speed profile as well as PID coeffcents for such a speed were
+	not calculated that need to be done in the next step.
+	THIS VERSION IS CREATED TO BE A BASELINE FOR RE-WRITTING THE CODE to move PID regulator out of ISR
+	to get ISR shorter.
+
+speedctrl.zip - contains excel files with various measurements when I tried to get both track speed the same
+	using different aproaches. Finally it contains also excel done to get PID parameters and
+	finally the results for PID applied in MID profile.
+########################################################################################################################
+
+Release: 5.7
+Date: 06-Oct-2010
+Description:
+	- uCOS-II was finally run.
+	- Timer0 is used to generate timer IRQ.
+	- ISR is written according to ARM port of uCOS-II with all bug fixed.
+	- Two tasks are finally running in paraller means uCOS-II port is completed.
+	- C memalloc and free developed and tested.
+	- C++ ready - global operator new() and global operator delete() ready to not use lstdc++ standard library.
+	- Critical exception generation through SWI added.
+	- stack for all modes verified and setup in linker command file not in startup code.
+	- heap start and end defined at linking time - provides all free RAM for heap automatically.
+	- os_wrap created to provide object orieted wrapper to uCOS-II with singleton Kernel and Thread
+	- preliminary version of Notifier, Publisher, Subscriber and Dispatcher tested without threads
+          (in code Dispatcher is derived from cThread to dispatch periodically but  this was not yet checked)
+	- original idea of cDispatcher inheriting from cThread rewritten cKernel keeps cDispatcher and cDispatcherThread
+          as well as all global Mutexes to protect heap allocations and Notifier's reference counting
+	- cMngBase class defined capable to publish and subscribe notifiers working example created based on it:
+          AppManager is publishing periodically two notifiers NT_ID02-LedOn and NT_ID03-LedOff, whlile
+	  LedManager is subscribed to receive two notifiers and either turn on LED or off and change status on LCD
+	- cSmartPtr template class re-written to correctly handle smart ptr to different notifier types like
+	  cTypeNotifier and cDataNotifier with working example of one publisher and two subscribers.
+	  There is also high priority notifiers handling added which places high priority in front of the
+	  publisher and subscriber queue
+        - initial version to generate PWM waves for motor control on uP pin 69 (PWM1) and pin 70 (PWM2)
+	- stack frame problem fixed - added -fomit-frame-pointer to generate interrupt safe function entry code
+	- layered structure naming convention applied to the files
+	- gpio with servicies to read BUT1, BUT2 and J1 added and checked
+	- cNotifier and derivatives modified to be initialized when instantinated
+	- when uCOS-II resource is not created by C++ wrapper an exception is generated
+	- InManager added to generate key related Notifiers (on key press and on key release)
+	- changed frequency of PWM for MOTRO control from 25kHZ to 8366 Hz (Timer3 prescaler =0x05 instead 0x01)
+	- added MOTOR direction control commends into hw_gpio.c with PWM count change
+	- added StackCheck capabilities to cThread
+	- added ADC handling through SPI
+	- added Buzzer control functions
+	- added LCD windowing management framework (contains very basic initial controls for extension in future)
+	- destination structure of managers (mng_motion,mng_sense,mng_hmi,mng_ctrl,mng_sys,mng_app)
+	- improved operators inside cSmartPtrBase and cSmartPtr to deal with NULL pointers
+	- non-blocking Notifier receive function - capable to get "NULL" i.e. invalid smart pointer (what means none notifier received)
+	- added tracks transoptors interrupt handling
+	- added motor control function to make movements based on specified number of transoptor counts
+	- added power source FSM to detect normal, warn and low state (not tested)
++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+	- added graphics heap placed in USB controllerr SRAM
+	- Microchip Graphics Library (MGL) ported to work with my LCD
+	- all old style Windows Graphic Library approach removed from the project
+	- simple MGL applications created with sliders to play with LCD colors
+########################################################################################################################
+
+elease: 5.6
+Date: 25-May-2010
+Description:
+	- uCOS-II was finally run.
+	- Timer0 is used to generate timer IRQ.
+	- ISR is written according to ARM port of uCOS-II with all bug fixed.
+	- Two tasks are finally running in paraller means uCOS-II port is completed.
+	- C memalloc and free developed and tested.
+	- C++ ready - global operator new() and global operator delete() ready to not use lstdc++ standard library.
+	- Critical exception generation through SWI added.
+	- stack for all modes verified and setup in linker command file not in startup code.
+	- heap start and end defined at linking time - provides all free RAM for heap automatically.
+	- os_wrap created to provide object orieted wrapper to uCOS-II with singleton Kernel and Thread
+	- preliminary version of Notifier, Publisher, Subscriber and Dispatcher tested without threads
+          (in code Dispatcher is derived from cThread to dispatch periodically but  this was not yet checked)
+	- original idea of cDispatcher inheriting from cThread rewritten cKernel keeps cDispatcher and cDispatcherThread
+          as well as all global Mutexes to protect heap allocations and Notifier's reference counting
+	- cMngBase class defined capable to publish and subscribe notifiers working example created based on it:
+          AppManager is publishing periodically two notifiers NT_ID02-LedOn and NT_ID03-LedOff, whlile
+	  LedManager is subscribed to receive two notifiers and either turn on LED or off and change status on LCD
+	- cSmartPtr template class re-written to correctly handle smart ptr to different notifier types like
+	  cTypeNotifier and cDataNotifier with working example of one publisher and two subscribers.
+	  There is also high priority notifiers handling added which places high priority in front of the
+	  publisher and subscriber queue
+        - initial version to generate PWM waves for motor control on uP pin 69 (PWM1) and pin 70 (PWM2)
+	- stack frame problem fixed - added -fomit-frame-pointer to generate interrupt safe function entry code
+	- layered structure naming convention applied to the files
+	- gpio with servicies to read BUT1, BUT2 and J1 added and checked
+	- cNotifier and derivatives modified to be initialized when instantinated
+	- when uCOS-II resource is not created by C++ wrapper an exception is generated
+	- InManager added to generate key related Notifiers (on key press and on key release)
+	- changed frequency of PWM for MOTRO control from 25kHZ to 8366 Hz (Timer3 prescaler =0x05 instead 0x01)
+	- added MOTOR direction control commends into hw_gpio.c with PWM count change
+	- added StackCheck capabilities to cThread
+	- added ADC handling through SPI
+	- added Buzzer control functions
+	- added LCD windowing management framework (contains very basic initial controls for extension in future)
+	- destination structure of managers (mng_motion,mng_sense,mng_hmi,mng_ctrl,mng_sys,mng_app)
+	+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+	- improved operators inside cSmartPtrBase and cSmartPtr to deal with NULL pointers
+	- non-blocking Notifier receive function - capable to get "NULL" i.e. invalid smart pointer (what means none notifier received)
+	- added tracks transoptors interrupt handling
+	- added motor control function to make movements based on specified number of transoptor counts
+	- added power source FSM to detect normal, warn and low state (not tested)
+########################################################################################################################
+
+Release: 5.5
+Date: 9-Jan-2010
+Description:
+	- uCOS-II was finally run.
+	- Timer0 is used to generate timer IRQ.
+	- ISR is written according to ARM port of uCOS-II with all bug fixed.
+	- Two tasks are finally running in paraller means uCOS-II port is completed.
+	- C memalloc and free developed and tested.
+	- C++ ready - global operator new() and global operator delete() ready to not use lstdc++ standard library.
+	- Critical exception generation through SWI added.
+	- stack for all modes verified and setup in linker command file not in startup code.
+	- heap start and end defined at linking time - provides all free RAM for heap automatically.
+	- os_wrap created to provide object orieted wrapper to uCOS-II with singleton Kernel and Thread
+	- preliminary version of Notifier, Publisher, Subscriber and Dispatcher tested without threads
+          (in code Dispatcher is derived from cThread to dispatch periodically but  this was not yet checked)
+	- original idea of cDispatcher inheriting from cThread rewritten cKernel keeps cDispatcher and cDispatcherThread
+          as well as all global Mutexes to protect heap allocations and Notifier's reference counting
+	- cMngBase class defined capable to publish and subscribe notifiers working example created based on it:
+          AppManager is publishing periodically two notifiers NT_ID02-LedOn and NT_ID03-LedOff, whlile
+	  LedManager is subscribed to receive two notifiers and either turn on LED or off and change status on LCD
+	- cSmartPtr template class re-written to correctly handle smart ptr to different notifier types like
+	  cTypeNotifier and cDataNotifier with working example of one publisher and two subscribers.
+	  There is also high priority notifiers handling added which places high priority in front of the
+	  publisher and subscriber queue
+        - initial version to generate PWM waves for motor control on uP pin 69 (PWM1) and pin 70 (PWM2)
+	- stack frame problem fixed - added -fomit-frame-pointer to generate interrupt safe function entry code
+	- layered structure naming convention applied to the files
+	- gpio with servicies to read BUT1, BUT2 and J1 added and checked
+	- cNotifier and derivatives modified to be initialized when instantinated
+	- when uCOS-II resource is not created by C++ wrapper an exception is generated
+	- InManager added to generate key related Notifiers (on key press and on key release)
+	+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+	- changed frequency of PWM for MOTRO control from 25kHZ to 8366 Hz (Timer3 prescaler =0x05 instead 0x01)
+	- added MOTOR direction control commends into hw_gpio.c with PWM count change
+	- added StackCheck capabilities to cThread
+	- added ADC handling through SPI
+	- added Buzzer control functions
+	- added LCD windowing management framework (contains very basic initial controls for extension in future)
+	- destination structure of managers (mng_motion,mng_sense,mng_hmi,mng_ctrl,mng_sys,mng_app)	
+########################################################################################################################
+
+Release: 5.4
+Date: 23-Sep-2009
+Description:
+	- uCOS-II was finally run.
+	- Timer0 is used to generate timer IRQ.
+	- ISR is written according to ARM port of uCOS-II with all bug fixed.
+	- Two tasks are finally running in paraller means uCOS-II port is completed.
+	- C memalloc and free developed and tested.
+	- C++ ready - global operator new() and global operator delete() ready to not use lstdc++ standard library.
+	- Critical exception generation through SWI added.
+	- stack for all modes verified and setup in linker command file not in startup code.
+	- heap start and end defined at linking time - provides all free RAM for heap automatically.
+	- os_wrap created to provide object orieted wrapper to uCOS-II with singleton Kernel and Thread
+	- preliminary version of Notifier, Publisher, Subscriber and Dispatcher tested without threads
+          (in code Dispatcher is derived from cThread to dispatch periodically but  this was not yet checked)
+	- original idea of cDispatcher inheriting from cThread rewritten cKernel keeps cDispatcher and cDispatcherThread
+          as well as all global Mutexes to protect heap allocations and Notifier's reference counting
+	- cMngBase class defined capable to publish and subscribe notifiers working example created based on it:
+          AppManager is publishing periodically two notifiers NT_ID02-LedOn and NT_ID03-LedOff, whlile
+	  LedManager is subscribed to receive two notifiers and either turn on LED or off and change status on LCD
+	- cSmartPtr template class re-written to correctly handle smart ptr to different notifier types like
+	  cTypeNotifier and cDataNotifier with working example of one publisher and two subscribers.
+	  There is also high priority notifiers handling added which places high priority in front of the
+	  publisher and subscriber queue
+        - initial version to generate PWM waves for motor control on uP pin 69 (PWM1) and pin 70 (PWM2)
+	- stack frame problem fixed - added -fomit-frame-pointer to generate interrupt safe function entry code
+	+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+	- layered structure naming convention applied to the files
+	- gpio with servicies to read BUT1, BUT2 and J1 added and checked
+	- cNotifier and derivatives modified to be initialized when instantinated
+	- when uCOS-II resource is not created by C++ wrapper an exception is generated
+	- InManager added to generate key related Notifiers (on key press and on key release)
+########################################################################################################################
+
+Release: 5.3
+Date: 6-Sep-2009
+Description:
+	- uCOS-II was finally run.
+	- Timer0 is used to generate timer IRQ.
+	- ISR is written according to ARM port of uCOS-II with all bug fixed.
+	- Two tasks are finally running in paraller means uCOS-II port is completed.
+	- C memalloc and free developed and tested.
+	- C++ ready - global operator new() and global operator delete() ready to not use lstdc++ standard library.
+	- Critical exception generation through SWI added.
+	- stack for all modes verified and setup in linker command file not in startup code.
+	- heap start and end defined at linking time - provides all free RAM for heap automatically.
+	- os_wrap created to provide object orieted wrapper to uCOS-II with singleton Kernel and Thread
+	- preliminary version of Notifier, Publisher, Subscriber and Dispatcher tested without threads
+          (in code Dispatcher is derived from cThread to dispatch periodically but  this was not yet checked)
+	- original idea of cDispatcher inheriting from cThread rewritten cKernel keeps cDispatcher and cDispatcherThread
+          as well as all global Mutexes to protect heap allocations and Notifier's reference counting
+	- cMngBase class defined capable to publish and subscribe notifiers working example created based on it:
+          AppManager is publishing periodically two notifiers NT_ID02-LedOn and NT_ID03-LedOff, whlile
+	  LedManager is subscribed to receive two notifiers and either turn on LED or off and change status on LCD
+	- cSmartPtr template class re-written to correctly handle smart ptr to different notifier types like
+	  cTypeNotifier and cDataNotifier with working example of one publisher and two subscribers.
+	  There is also high priority notifiers handling added which places high priority in front of the
+	  publisher and subscriber queue
+    - initial version to generate PWM waves for motor control on uP pin 69 (PWM1) and pin 70 (PWM2)
+	- stack frame problem fixed - added -fomit-frame-pointer to generate interrupt safe function entry code
+#######################################################################################################################
+
+Release: 5.2
+Date: 2-May-2009
+Description:
+	- uCOS-II was finally run.
+	- Timer0 is used to generate timer IRQ.
+	- ISR is written according to ARM port of uCOS-II with all bug fixed.
+	- Two tasks are finally running in paraller means uCOS-II port is completed.
+	- C memalloc and free developed and tested.
+	- C++ ready - global operator new() and global operator delete() ready to not use lstdc++ standard library.
+	- Critical exception generation through SWI added.
+	- stack for all modes verified and setup in linker command file not in startup code.
+	- heap start and end defined at linking time - provides all free RAM for heap automatically.
+	- os_wrap created to provide object orieted wrapper to uCOS-II with singleton Kernel and Thread
+	- preliminary version of Notifier, Publisher, Subscriber and Dispatcher tested without threads
+          (in code Dispatcher is derived from cThread to dispatch periodically but  this was not yet checked)
+	- original idea of cDispatcher inheriting from cThread rewritten cKernel keeps cDispatcher and cDispatcherThread
+          as well as all global Mutexes to protect heap allocations and Notifier's reference counting
+	- cMngBase class defined capable to publish and subscribe notifiers working example created based on it:
+          AppManager is publishing periodically two notifiers NT_ID02-LedOn and NT_ID03-LedOff, whlile
+	  LedManager is subscribed to receive two notifiers and either turn on LED or off and change status on LCD
+	- cSmartPtr template class re-written to correctly handle smart ptr to different notifier types like
+	  cTypeNotifier and cDataNotifier with working example of one publisher and two subscribers.
+	  There is also high priority notifiers handling added which places high priority in front of the
+	  publisher and subscriber queue
+        - initial version to generate PWM waves for motor control on uP pin 69 (PWM1) and pin 70 (PWM2)
+#######################################################################################################################
+
+Release: 5.1
+Date: 21-December-2008
+Description:
+	- uCOS-II was finally run.
+	- Timer0 is used to generate timer IRQ.
+	- ISR is written according to ARM port of uCOS-II with all bug fixed.
+	- Two tasks are finally running in paraller means uCOS-II port is completed.
+	- C memalloc and free developed and tested.
+	- C++ ready - global operator new() and global operator delete() ready to not use lstdc++ standard library.
+	- Critical exception generation through SWI added.
+	- stack for all modes verified and setup in linker command file not in startup code.
+	- heap start and end defined at linking time - provides all free RAM for heap automatically.
+	- os_wrap created to provide object orieted wrapper to uCOS-II with singleton Kernel and Thread
+	- preliminary version of Notifier, Publisher, Subscriber and Dispatcher tested without threads
+          (in code Dispatcher is derived from cThread to dispatch periodically but  this was not yet checked)
+	- original idea of cDispatcher inheriting from cThread rewritten cKernel keeps cDispatcher and cDispatcherThread
+          as well as all global Mutexes to protect heap allocations and Notifier's reference counting
+	- cMngBase class defined capable to publish and subscribe notifiers working example created based on it:
+          AppManager is publishing periodically two notifiers NT_ID02-LedOn and NT_ID03-LedOff, whlile
+	  LedManager is subscribed to receive two notifiers and either turn on LED or off and change status on LCD
+	- cSmartPtr template class re-written to correctly handle smart ptr to different notifier types like
+	  cTypeNotifier and cDataNotifier with working example of one publisher and two subscribers.
+	  There is also high priority notifiers handling added which places high priority in front of the
+	  publisher and subscriber queue
+#######################################################################################################################
+
+Release: 5.0
+Date: 17-December-2008
+Description:
+	- uCOS-II was finally run.
+	- Timer0 is used to generate timer IRQ.
+	- ISR is written according to ARM port of uCOS-II with all bug fixed.
+	- Two tasks are finally running in paraller means uCOS-II port is completed.
+	- C memalloc and free developed and tested.
+	- C++ ready - global operator new() and global operator delete() ready to not use lstdc++ standard library.
+	- Critical exception generation through SWI added.
+	- stack for all modes verified and setup in linker command file not in startup code.
+	- heap start and end defined at linking time - provides all free RAM for heap automatically.
+	- os_wrap created to provide object orieted wrapper to uCOS-II with singleton Kernel and Thread
+	- preliminary version of Notifier, Publisher, Subscriber and Dispatcher tested without threads
+          (in code Dispatcher is derived from cThread to dispatch periodically but  this was not yet checked)
+	- original idea of cDispatcher inheriting from cThread rewritten cKernel keeps cDispatcher and cDispatcherThread
+          as well as all global Mutexes to protect heap allocations and Notifier's reference counting
+	- cMngBase class defined capable to publish and subscribe notifiers working example created based on it:
+          AppManager is publishing periodically two notifiers NT_ID02-LedOn and NT_ID03-LedOff, whlile
+	  LedManager is subscribed to receive two notifiers and either turn on LED or off and change status on LCD
+#######################################################################################################################
+
+Release: 4.1
+Date: 17-December-2008
+Description:
+	- uCOS-II was finally run.
+	- Timer0 is used to generate timer IRQ.
+	- ISR is written according to ARM port of uCOS-II with all bugs fixed.
+	- Two tasks are finally running in paraller means uCOS-II port is completed.
+	- C memalloc and free developed and tested.
+	- C++ ready - global operator new() and global operator delete() ready to not use lstdc++ standard library.
+	- Critical exception generation through SWI added.
+	- stack for all modes verified and setup in linker command file not in startup code.
+	- heap start and end defined at linking time - provides all free RAM for heap automatically.
+	- os_wrap created to provide object orieted wrapper to uCOS-II with singleton Kernel and Thread
+	- preliminary version of Notifier, Publisher, Subscriber and Dispatcher tested without threads
+          (in code Dispatcher is derived from cThread to dispatch periodically but  this was not yet checked)
+	- original idea of cDispatcher inheriting from cThread rewritten cKernel keeps cDispatcher and cDispatcherThread
+          as well as all global Mutexes to protect heap allocations and Notifier's reference counting
+#######################################################################################################################
+          
+Release: 4.0
+Date: 13-December-2008
+Description:
+	- uCOS-II was finally run.
+	- Timer0 is used to generate timer IRQ.
+	- ISR is written according to ARM port of uCOS-II with all bug fixed.
+	- Two tasks are finally running in paraller means uCOS-II port is completed.
+	- C memalloc and free developed and tested.
+	- C++ ready - global operator new() and global operator delete() ready to not use lstdc++ standard library.
+	- Critical exception generation through SWI added.
+	- stack for all modes verified and setup in linker command file not in startup code.
+	- heap start and end defined at linking time - provides all free RAM for heap automatically.
+	- os_wrap created to provide object orieted wrapper to uCOS-II with singleton Kernel and Thread
+	- preliminary version of Notifier, Publisher, Subscriber and Dispatcher tested without threads
+#######################################################################################################################
+	
+Release: 3.3
+Date: 29-November-2008
+Description:
+	- uCOS-II was finally run.
+	- Timer0 is used to generate timer IRQ.
+	- ISR is written according to ARM port of uCOS-II with all bug fixed.
+	- Two tasks are finally running in paraller means uCOS-II port is completed.
+	- C memalloc and free developed and tested.
+	- C++ ready - global operator new() and global operator delete() ready to not use lstdc++ standard library.
+	- Critical exception generation through SWI added.
+	- stack for all modes verified and setup in linker command file not in startup code.
+	- heap start and end defined at linking time - provides all free RAM for heap automatically.
+	- os_wrap created to provide object orieted wrapper to uCOS-II with singleton Kernel and Thread
+#######################################################################################################################
+	
+Release: 3.1
+Date: 2-November-2008
+Description:
+	- uCOS-II was finally run.
+	- Timer0 is used to generate timer IRQ.
+	- ISR is written according to ARM port of uCOS-II with all bug fixed.
+	- Two tasks are finally running in paraller means uCOS-II port is completed.
+	- C memalloc and free developed and tested.
+	- C++ ready - global operator new() and global operator delete() ready to not use lstdc++ standard library.
+	- Critical exception generation through SWI added.
+	- stack for all modes verified and setup in linker command file not in startup code.
+	- heap start and end defined at linking time - provides all free RAM for heap automatically.
+#######################################################################################################################
+
+Release: 3.1
+Date: 2-November-2008
+Description:
+	- uCOS-II was finally run.
+	- Timer0 is used to generate timer IRQ.
+	- ISR is written according to ARM port of uCOS-II with all bug fixed.
+	- Two tasks are finally running in paraller.
+	- C memalloc and free developed and tested.
+	- C++ ready - global operator new() and global operator delete() ready to not use lstdc++ standard library.
+	- Critical exception generation through SWI added.
+#######################################################################################################################
+	
+Release: 3.0
+Date: 16-October-2008
+Description:
+	- uCOS-II was finally run.
+	- Timer0 is used to generate timer IRQ.
+	- ISR is written according to ARM port of uCOS-II with all bug fixed.
+	- Two tasks are finally running in paraller.
+	- C memalloc and free developed and tested
+	- C++ ready - global operator new() and global operator delete() ready to not use lstdc++ standard library
+#######################################################################################################################
+
+Release: 2.0
+Date: 17-August-2008
+Description:
+	- uCOS-II was finally run.
+	- Timer0 is used to generate timer IRQ.
+	- ISR is written according to ARM port of uCOS-II with all bug fixed.
+	- Two tasks are finally running in paraller.
+#######################################################################################################################
+	
+Release: 1.2
+Date: 11-August-2008
+Description:
+	The main function contains LCD access example and in paraller to it timer IRQ are run
+	and handled by IRQ Handler in C.
+	This was used to check and prove that Timer0 can be run, VIC can be setup and IRQ can be handled,
+	before uCOS-II will be finally ported and connected to timer interrupt with its OSTimeTick function.
+#######################################################################################################################		
+
+Release: 1.1
+Date: 2-August-2008
+Description:
+	- release 1.0 for which review of uCOS-II files was made just befor an attempt to
+      write Tick Interrupt Handler to integrite and run uCOS-II with ARM uP for my LPC2378 Board.
+#######################################################################################################################
+	
+Release: 1.0
+Date: 26-July-2008
+Description:
+	- main which uses lcd
+	- lcd ready for lpc2378 evaluation board
+	- ucOS old uCOS merged with ARM uCOSII port so it compiles without warnings but without
+          interrupts handlesr and not integrated with start-up etc.
+#######################################################################################################################
+ 			          	  
