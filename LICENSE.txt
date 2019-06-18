@@ -1,3 +1,10 @@
+All files identified with my name (Bogdan Kowalczyk) are MIT licensed according to the below.
+In this repository there are also files which comes from other authors, I made an attempt
+to list them all even when I modified them, those files to my best knowledge are public 
+as well anyhow because I am not 100% sure as there was not always license file avaliable
+I am not able to guarantee this.
+
+
 MIT License
 
 Copyright (c) 2019 Bogdan Kowalczyk
