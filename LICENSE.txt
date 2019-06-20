@@ -1,8 +1,14 @@
 All files identified with my name (Bogdan Kowalczyk) are MIT licensed according to the below.
+
 In this repository there are also files which comes from other authors, I made an attempt
-to list them all even when I modified them, those files to my best knowledge are/were free 
-as well anyhow because I am not 100% sure as there was not always license file available
-I am not able to guarantee this.
+to keep original copyright notes even when I modified the files. Those files to my best knowledge are/were free 
+anyhow because I am not 100% sure as there was not always license file available I am not able to guarantee this.
+
+Wall-e rely on uC/OS-II real time operating system (RTOS), I used old files I had from Jean J. Labrosse book
+MicroC/OS-II: The Real Time Kernel (which included the code) extended by additional files needed to make operating 
+system port to LPC2378 microcontroller.
+According to Micrium who is uC/OS-II owner uC/OS is free for non-commercial use  (https://www.micrium.com/buy/licensing/).
+Because that is definitely non-commercial use, hobby type project I placed those files in my project repository as well.  
 
 
 MIT License
