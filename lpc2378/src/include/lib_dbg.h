@@ -10,6 +10,8 @@
 * Description: Functions for remote debug handling from through mng_rtm (remote) manager commands
 * Author:      Bogdan Kowalczyk
 * Date:        06-Jan-2017
+* Note:        This module reuse concept and source code of Robert Ward / Dr. Rainer Storn build-in debugger
+*              as published in Dr. Dobb's Journal (not sure probably in 1997)
 * History:
 * 06-Jan-2017 - Initial version of remote commands processing library
 * 
